@@ -57,7 +57,7 @@ Blog: U{http://crackinglandia.blogspot.com}
     ImageBoundImportDescriptor, ImageBoundImportDescriptorEntry, TLSDirectory, TLSDirectory64, ImageBaseRelocationEntry, 
     ImageBaseRelocation, ImageDebugDirectory, ImageDebugDirectories, ImageImportDescriptorMetaData, ImageImportDescriptorEntry,
     ImageImportDescriptor, ImportAddressTableEntry, ImportAddressTableEntry64, ImportAddressTable, ExportTable, ExportTableEntry, 
-    ImageExportTable, NETDirectory, NetDirectory, NetMetaDataHeader, NetMetaDataStreamEntry, NetMetaDataStreams, NetMetaDataTableHeader, 
+    ImageExportTable, NETDirectory, ImageCOR20Header, NetMetaDataHeader, NetMetaDataStreamEntry, NetMetaDataStreams, NetMetaDataTableHeader,
     NetMetaDataTables
     
 @type version: str
@@ -139,7 +139,7 @@ __all__ = [
             "ExportTableEntry",
             "ImageExportTable",
             "NETDirectory",
-            "NetDirectory",
+            "ImageCOR20Header",
             "NetMetaDataHeader",
             "NetMetaDataStreamEntry",
             "NetMetaDataStreams",

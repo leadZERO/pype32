@@ -54,7 +54,7 @@ doc\pype32.directories.ImageImportDescriptorMetaData-class.html
 doc\pype32.directories.ImportAddressTable-class.html
 doc\pype32.directories.ImportAddressTableEntry-class.html
 doc\pype32.directories.ImportAddressTableEntry64-class.html
-doc\pype32.directories.NetDirectory-class.html
+doc\pype32.directories.ImageCOR20Header-class.html
 doc\pype32.directories.NetMetaDataHeader-class.html
 doc\pype32.directories.NetMetaDataStreamEntry-class.html
 doc\pype32.directories.NetMetaDataStreams-class.html

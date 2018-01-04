@@ -935,7 +935,7 @@ class NETDirectory(baseclasses.BaseStructClass):
         """
         baseclasses.BaseStructClass.__init__(self, shouldPack)
         
-        self.directory = NetDirectory() #: L{NetDirectory} directory.
+        self.directory = ImageCOR20Header() #: L{ImageCOR20Header} directory.
         self.netMetaDataHeader = NetMetaDataHeader() #: L{NetMetaDataHeader} netMetaDataHeader.
         self.netMetaDataStreams = NetMetaDataStreams() #: L{NetMetaDataStreams} netMetaDataStreams.
     
@@ -954,7 +954,7 @@ class NETDirectory(baseclasses.BaseStructClass):
         """
         nd = NETDirectory()
         
-        nd.directory = NetDirectory.parse(readDataInstance)
+        nd.directory = ImageCOR20Header.parse(readDataInstance)
         nd.netMetaDataHeader = NetMetaDataHeader.parse(readDataInstance)
         nd.netMetaDataStreams = NetMetaDataStreams.parse(readDataInstance)
         return nd
@@ -963,8 +963,8 @@ class NETDirectory(baseclasses.BaseStructClass):
         """Returns L{consts.NET_DIRECTORY}."""
         return consts.NET_DIRECTORY
         
-class NetDirectory(baseclasses.BaseStructClass):
-    """NetDirectory object."""
+class ImageCOR20Header(baseclasses.BaseStructClass):
+    """ImageCOR20Header object."""
     def __init__(self,  shouldPack = True):
         """
         A class representation of the C{IMAGE_COR20_HEADER} structure.
@@ -1005,10 +1005,10 @@ class NetDirectory(baseclasses.BaseStructClass):
         @type readDataInstance: L{ReadData}
         @param readDataInstance: A L{ReadData} object with data to be parsed as a L{NetDirectory} object.
         
-        @rtype: L{NetDirectory}
+        @rtype: L{ImageCOR20Header}
         @return: A new L{NetDirectory} object.
         """
-        nd = NetDirectory()
+        nd = ImageCOR20Header()
         
         nd.cb.value = readDataInstance.readDword()
         nd.majorRuntimeVersion.value= readDataInstance.readWord()
