@@ -39,9 +39,9 @@ __all__ = [
            "DataDirectory", 
            ]
            
-import consts
-import excep
-import datatypes
+from . import consts
+from . import excep
+from . import datatypes
 
 from struct import pack
 

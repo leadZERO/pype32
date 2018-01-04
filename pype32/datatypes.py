@@ -50,10 +50,10 @@ __all__ = [
            "Array",
            ]
 
-import utils
-import excep
+from . import utils
+from . import excep
 
-from baseclasses import DataTypeBaseClass
+from .baseclasses import DataTypeBaseClass
 from struct import pack,  unpack
 
 TYPE_QWORD = 0xFECAFECA

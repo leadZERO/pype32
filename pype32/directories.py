@@ -34,13 +34,13 @@ PE directory classes.
 
 __revision__ = "$Id$"
            
-import datatypes
-import consts
-import datadirs
-import excep
-import utils
-import baseclasses
-import dotnet
+from . import datatypes
+from . import consts
+from . import datadirs
+from . import excep
+from . import utils
+from . import baseclasses
+from . import dotnet
 
 # typedef struct IMAGE_BOUND_FORWARDER_REF
 # {
@@ -1250,14 +1250,14 @@ class NetMetaDataTables(baseclasses.BaseStructClass):
 
         metadataTableDefinitions = dotnet.MetadataTableDefinitions(dt, netMetaDataStreams)
 
-        for i in xrange(64):
+        for i in range(64):
             dt.tables[i] = { "rows": 0 }
             if dt.netMetaDataTableHeader.maskValid.value >> i & 1:
                 dt.tables[i]["rows"] = readDataInstance.readDword()
             if i in dotnet.MetadataTableNames:
                 dt.tables[dotnet.MetadataTableNames[i]] = dt.tables[i]
 
-        for i in xrange(64):
+        for i in range(64):
             dt.tables[i]["data"] = []
             for j in range(dt.tables[i]["rows"]):
                 row = None
@@ -1265,7 +1265,7 @@ class NetMetaDataTables(baseclasses.BaseStructClass):
                     row = readDataInstance.readFields(metadataTableDefinitions[i])
                 dt.tables[i]["data"].append(row)
 
-        for i in xrange(64):
+        for i in range(64):
             if i in dotnet.MetadataTableNames:
                 dt.tables[dotnet.MetadataTableNames[i]] = dt.tables[i]["data"]
             dt.tables[i] = dt.tables[i]["data"]
@@ -1333,18 +1333,18 @@ class NetResources(baseclasses.BaseStructClass):
         r.resourceTypeCount = readDataInstance.readDword()
 
         r.resourceTypes = []
-        for i in xrange(r.resourceTypeCount):
+        for i in range(r.resourceTypeCount):
             r.resourceTypes.append(readDataInstance.readDotNetBlob())
 
         # aligned to 8 bytes
         readDataInstance.skipBytes(8 - readDataInstance.tell() & 0x7)
 
         r.resourceHashes = []
-        for i in xrange(r.resourceCount):
+        for i in range(r.resourceCount):
             r.resourceHashes.append(readDataInstance.readDword())
 
         r.resourceNameOffsets = []
-        for i in xrange(r.resourceCount):
+        for i in range(r.resourceCount):
             r.resourceNameOffsets.append(readDataInstance.readDword())
 
         r.dataSectionOffset = readDataInstance.readDword()
@@ -1352,13 +1352,13 @@ class NetResources(baseclasses.BaseStructClass):
         r.resourceNames = []
         r.resourceOffsets = []
         base = readDataInstance.tell()
-        for i in xrange(r.resourceCount):
+        for i in range(r.resourceCount):
             readDataInstance.setOffset(base + r.resourceNameOffsets[i])
             r.resourceNames.append(readDataInstance.readDotNetUnicodeString())
             r.resourceOffsets.append(readDataInstance.readDword())
 
         r.info = {}
-        for i in xrange(r.resourceCount):
+        for i in range(r.resourceCount):
             readDataInstance.setOffset(r.dataSectionOffset + r.resourceOffsets[i])
             r.info[i] = readDataInstance.read(len(readDataInstance))
             r.info[r.resourceNames[i]] = r.info[i]

@@ -57,13 +57,13 @@ import os
 import hashlib
 import binascii
 
-import datadirs
-import datatypes
-import consts
-import excep
-import utils
-import directories
-import baseclasses
+from . import datadirs
+from . import datatypes
+from . import consts
+from . import excep
+from . import utils
+from . import directories
+from . import baseclasses
 
 from struct import pack, unpack
 
@@ -181,7 +181,7 @@ class PE(object):
             raise excep.PEException("Invalid PE signature. Found %d instead of %d." % (self.ntHeaders.optionaHeader.signature.value, consts.PE_SIGNATURE))
             
         if self.ntHeaders.optionalHeader.numberOfRvaAndSizes.value > 0x10:
-            print excep.PEWarning("Suspicious value for NumberOfRvaAndSizes: %d." % self.ntHeaders.optionaHeader.numberOfRvaAndSizes.value)
+            print(excep.PEWarning("Suspicious value for NumberOfRvaAndSizes: %d." % self.ntHeaders.optionaHeader.numberOfRvaAndSizes.value))
             
     def readFile(self, pathToFile):
         """
@@ -260,7 +260,7 @@ class PE(object):
         for dir in dataDirs:
             dataToWrite = str(dir.info)
             if len(dataToWrite) != dir.size.value and self._verbose:
-                print excep.DataLengthException("Warning: current size of %s directory does not match with dataToWrite length %d." % (dir.size.value, len(dataToWrite)))
+                print(excep.DataLengthException("Warning: current size of %s directory does not match with dataToWrite length %d." % (dir.size.value, len(dataToWrite))))
             wr.setOffset(self.getOffsetFromRva(dir.rva.value))
             wr.write(dataToWrite)
         return str(wr)
@@ -327,7 +327,7 @@ class PE(object):
                 readDataInstance.setOffset(offset)
             except excep.WrongOffsetValueException:
                 if self._verbose:
-                    print "It seems that the file has no overlay data."
+                    print("It seems that the file has no overlay data.")
         else:
             raise excep.InstanceErrorException("ReadData instance or SectionHeaders instance not specified.")
             
@@ -565,7 +565,7 @@ class PE(object):
                     raise IndexError("list index out of range.")
                     
                 if vz < rz:
-                    print "WARNING: VirtualSize (%x) is less than SizeOfRawData (%x)" % (vz,  rz)
+                    print("WARNING: VirtualSize (%x) is less than SizeOfRawData (%x)" % (vz,  rz))
                     
                 if len(data) % fa == 0:
                     self.sections[-1] += data
@@ -605,7 +605,7 @@ class PE(object):
                         rz = self.sectionHeaders[counter].pointerToRawData.value
                         
                         if vz < rz:
-                            print "WARNING: VirtualSize (%x) is less than SizeOfRawData (%x)" % (vz,  rz)
+                            print("WARNING: VirtualSize (%x) is less than SizeOfRawData (%x)" % (vz,  rz))
                             
                         counter += 1
                     
@@ -639,7 +639,7 @@ class PE(object):
         """
         if fileAlignment > consts.DEFAULT_FILE_ALIGNMENT:
             if not utils.powerOfTwo(fileAlignment):
-                print "Warning: FileAlignment is greater than DEFAULT_FILE_ALIGNMENT (0x200) and is not power of two."
+                print("Warning: FileAlignment is greater than DEFAULT_FILE_ALIGNMENT (0x200) and is not power of two.")
         
         if fileAlignment < consts.DEFAULT_FILE_ALIGNMENT:
             return value
@@ -667,7 +667,7 @@ class PE(object):
         """
         if fileAlignment < consts.DEFAULT_FILE_ALIGNMENT:
             if fileAligment != sectionAlignment:
-                print "FileAlignment does not match SectionAlignment."
+                print("FileAlignment does not match SectionAlignment.")
         
         if sectionAlignment < consts.DEFAULT_PAGE_SIZE:
             sectionAlignment = fileAlignment
@@ -953,7 +953,7 @@ class PE(object):
                 try:
                     dataDirectoryInstance[directory[0]].info = directory[1](dir.rva.value, dir.size.value, magic)
                 except Exception as e:
-                    print excep.PEWarning("Error parsing PE directory: %s." % directory[1].__name__.replace("_parse", ""))
+                    print(excep.PEWarning("Error parsing PE directory: %s." % directory[1].__name__.replace("_parse", "")))
 
     def _parseResourceDirectory(self, rva, size, magic = consts.PE32):
         """
@@ -1158,11 +1158,11 @@ class PE(object):
         addressOfFunctions = iet.addressOfFunctions.value
         
         # populate the auxFunctionRvaArray
-        for i in xrange(iet.numberOfFunctions.value):
+        for i in range(iet.numberOfFunctions.value):
             auxFunctionRvaArray.append(self.getDwordAtRva(addressOfFunctions).value)
             addressOfFunctions += datatypes.DWORD().sizeof()
             
-        for i in xrange(numberOfNames):
+        for i in range(numberOfNames):
             
             nameRva = self.getDwordAtRva(addressOfNames).value
             nameOrdinal = self.getWordAtRva(addressOfNameOrdinals).value
@@ -1187,7 +1187,7 @@ class PE(object):
         #print "export table length: %d" % len(iet.exportTable)
         
         #print "auxFunctionRvaArray: %r" % auxFunctionRvaArray
-        for i in xrange(iet.numberOfFunctions.value):
+        for i in range(iet.numberOfFunctions.value):
             #print "auxFunctionRvaArray[%d]: %x" % (i,  auxFunctionRvaArray[i])
             if auxFunctionRvaArray[i] != iet.exportTable[i].functionRva.value:
                 entry = directories.ExportTableEntry()
@@ -1259,7 +1259,7 @@ class PE(object):
                 count += 1
             except excep.DataLengthException:
                 if self._verbose:
-                    print "[!] Warning: DataLengthException detected!."
+                    print("[!] Warning: DataLengthException detected!.")
                 
         if numberOfEntries - 1 > count:
             numberOfEntries = count + 1
@@ -1513,9 +1513,9 @@ class PE(object):
                             retval = True
                             break
             else:
-                print "WARNING: IMPORT_DIRECTORY not found on PE!"
+                print("WARNING: IMPORT_DIRECTORY not found on PE!")
         else:
-            print "WARNING: fastLoad parameter was used to load the PE. Data directories are not parsed when using this options. Please, use fastLoad = False."
+            print("WARNING: fastLoad parameter was used to load the PE. Data directories are not parsed when using this options. Please, use fastLoad = False.")
         return retval
 
     def getNetMetadataToken(self, token):
@@ -1785,7 +1785,7 @@ class OptionalHeader(baseclasses.BaseStructClass):
         self.dllCharacteristics = datatypes.WORD(consts.TERMINAL_SERVER_AWARE) #: L{WORD} dllCharacteristics.
         self.sizeOfStackReserve = datatypes.DWORD(0x00100000) #: L{DWORD} sizeOfStackReserve.
         self.sizeOfStackCommit = datatypes.DWORD(0x00004000) #: L{DWORD} sizeOfStackCommit.
-        self.sizeOfHeapReserve = datatypes.DWORD(00100000) #: L{DWORD} sizeOfHeapReserve.
+        self.sizeOfHeapReserve = datatypes.DWORD(0o0100000) #: L{DWORD} sizeOfHeapReserve.
         self.sizeOfHeapCommit = datatypes.DWORD(0x1000) #: L{DWORD} sizeOfHeapCommit.
         self.loaderFlags = datatypes.DWORD(0) #: L{DWORD} loaderFlags.
         self.numberOfRvaAndSizes = datatypes.DWORD(0x10) #: L{DWORD} numberOfRvaAndSizes.
@@ -1921,7 +1921,7 @@ class OptionalHeader64(baseclasses.BaseStructClass):
         self.dllCharacteristics = datatypes.WORD(consts.TERMINAL_SERVER_AWARE) #: L{WORD} dllCharacteristics.
         self.sizeOfStackReserve = datatypes.QWORD(0x00100000) #: L{QWORD} sizeOfStackReserve.
         self.sizeOfStackCommit = datatypes.QWORD(0x00004000) #: L{QWORD} sizeOfStackCommit.
-        self.sizeOfHeapReserve = datatypes.QWORD(00100000) #: L{QWORD} sizeOfHeapReserve.
+        self.sizeOfHeapReserve = datatypes.QWORD(0o0100000) #: L{QWORD} sizeOfHeapReserve.
         self.sizeOfHeapCommit = datatypes.QWORD(0x1000) #: L{QWORD} sizeOfHeapCommit.
         self.loaderFlags = datatypes.DWORD(0) #: L{DWORD}  loaderFlags.
         self.numberOfRvaAndSizes = datatypes.DWORD(0x10) #: L{DWORD} numberOfRvaAndSizes.
@@ -2133,16 +2133,16 @@ class Sections(list):
         for sectionHdr in sectionHeadersInstance:
             
             if sectionHdr.sizeOfRawData.value > len(readDataInstance.data):
-                print "Warning: SizeOfRawData is larger than file."
+                print("Warning: SizeOfRawData is larger than file.")
             
             if sectionHdr.pointerToRawData.value > len(readDataInstance.data):
-                print "Warning: PointerToRawData points beyond the end of the file."
+                print("Warning: PointerToRawData points beyond the end of the file.")
             
             if sectionHdr.misc.value > 0x10000000:
-                print "Warning: VirtualSize is extremely large > 256MiB."
+                print("Warning: VirtualSize is extremely large > 256MiB.")
             
             if sectionHdr.virtualAddress.value > 0x10000000:
-                print "Warning: VirtualAddress is beyond 0x10000000"
+                print("Warning: VirtualAddress is beyond 0x10000000")
             
             # skip sections with pointerToRawData == 0. According to PECOFF, it contains uninitialized data
             if sectionHdr.pointerToRawData.value:

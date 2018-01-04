@@ -57,7 +57,7 @@ class BaseStructClass(object):
         return len(str(self))
 
     def __dir__(self):
-        return sorted(self._attrsList or self.__dict__.keys())
+        return sorted(self._attrsList or list(self.__dict__.keys()))
 
     def sizeof(self):
         return len(self)
@@ -168,12 +168,12 @@ class DataTypeBaseClass(object):
         if isinstance(other,  self.__class__):
             try:
                 result = self.value + other.value
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         else:
             try:
                 result = self.value + other
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         return result
     
@@ -182,12 +182,12 @@ class DataTypeBaseClass(object):
         if isinstance(other,  self.__class__):
             try:
                 result = self.value - other.value
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         else:
             try:
                 result = self.value - other
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         return result
     
@@ -198,7 +198,7 @@ class DataTypeBaseClass(object):
         else:
             try:
                 result = self.value * other
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         return result
         
@@ -223,7 +223,7 @@ class DataTypeBaseClass(object):
         else:
             try:
                 result = self.value ^ other
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         return result
         
@@ -234,7 +234,7 @@ class DataTypeBaseClass(object):
         else:
             try:
                 result = self.value >> other
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         return result
         
@@ -245,7 +245,7 @@ class DataTypeBaseClass(object):
         else:
             try:
                 result = self.value << other
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         return result
         
@@ -256,7 +256,7 @@ class DataTypeBaseClass(object):
         else:
             try:
                 result = self.value & other
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         return result
 
@@ -267,6 +267,6 @@ class DataTypeBaseClass(object):
         else:
             try:
                 result = self.value | other
-            except TypeError, e:
+            except TypeError as e:
                 raise e
         return result
