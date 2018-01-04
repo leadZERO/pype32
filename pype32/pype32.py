@@ -143,7 +143,7 @@ class PE(object):
         """
         rd.setOffset(0)
         sign = rd.read(2)
-        if sign == "MZ":
+        if sign == b"MZ":
             return True
         return False
         
@@ -160,7 +160,7 @@ class PE(object):
         rd.setOffset(0)
         e_lfanew_offset = unpack("<L",  rd.readAt(0x3c, 4))[0]
         sign = rd.readAt(e_lfanew_offset, 2)
-        if sign == "PE":
+        if sign == b"PE":
             return True
         return False
         
@@ -444,7 +444,11 @@ class PE(object):
         @rtype: str
         @return: A defaul DOS stub.
         """
-        return "0E1FBA0E00B409CD21B8014CCD21546869732070726F6772616D2063616E6E6F742062652072756E20696E20444F53206D6F64652E0D0D0A240000000000000037E338C97382569A7382569A7382569A6DD0D29A6982569A6DD0C39A6382569A6DD0D59A3A82569A54442D9A7482569A7382579A2582569A6DD0DC9A7282569A6DD0C29A7282569A6DD0C79A7282569A526963687382569A000000000000000000000000000000000000000000000000".decode("hex")
+        return bytes(bytearray.fromhex(
+                "0E1FBA0E00B409CD21B8014CCD21546869732070726F6772616D2063616E6E6F742062652072756E20696E20444F53206D6F"\
+                "64652E0D0D0A240000000000000037E338C97382569A7382569A7382569A6DD0D29A6982569A6DD0C39A6382569A6DD0D59A"\
+                "3A82569A54442D9A7482569A7382579A2582569A6DD0DC9A7282569A6DD0C29A7282569A6DD0C79A7282569A526963687382"\
+                "569A000000000000000000000000000000000000000000000000"))
 
     def _getPaddingToSectionOffset(self):
         """
@@ -1385,7 +1389,7 @@ class PE(object):
         netDirectoryClass = directories.NETDirectory()
 
         # parse the .NET Directory
-        netDir = directories.NetDirectory.parse(utils.ReadData(self.getDataAtRva(rva,  size)))
+        netDir = directories.ImageCOR20Header.parse(utils.ReadData(self.getDataAtRva(rva,  size)))
 
         netDirectoryClass.directory = netDir
 
